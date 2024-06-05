@@ -104,12 +104,6 @@ with tab1:
     end_idx = min(start_idx + per_page, len(df))
     st.write(df.iloc[start_idx:end_idx])
 
-    # Tombol untuk meringkas setiap artikel
-    for i in range(start_idx, end_idx):
-        if st.button(f"Ringkas Artikel {i}"):
-            ringkasan, _ = ringkas_teks(df.loc[i, 'isi-berita'])
-            df.at[i, 'ringkasan'] = ringkasan
-
 with tab2:
     st.header("Ringkas Artikel Kustom")
     teks_artikel = st.text_area("Masukkan teks artikel untuk diringkas")
