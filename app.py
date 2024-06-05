@@ -102,7 +102,26 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
-    st.write(df.iloc[start_idx:end_idx])
+
+    selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
+
+    if st.button("Ringkas"):
+        artikel_terpilih = df.iloc[selected_index]["isi_berita"]
+        ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
+        st.subheader("Artikel Asli")
+        st.write(artikel_terpilih)
+        st.subheader("Ringkasan")
+        st.write(ringkasan)
+        
+        st.subheader("Grafik Kemiripan Kalimat")
+        plt.figure(figsize=(10, 7))
+        nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
+        st.pyplot(plt)
+
+        st.subheader("Word Cloud")
+        image = Image.open('wordcloud.png')
+        st.image(image, use_column_width=True)
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
