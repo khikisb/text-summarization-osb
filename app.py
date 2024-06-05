@@ -105,24 +105,28 @@ with tab1:
 
     # Tampilkan tombol "Ringkas Berita" di samping setiap baris tabel
     for index, row in df.iloc[start_idx:end_idx].iterrows():
-        col1, col2, col3, col4 = st.columns([0.1, 0.3, 0.4, 0.2])
+        col1, col2, col3, col4, col5 = st.columns([0.1, 0.15, 0.25, 0.4, 0.1])
         with col1:
             if st.button("Ringkas", key=f"ringkas_{index}"):
-                ringkasan, _ = ringkas_teks(row["Isi Berita"])
+                ringkasan, _ = ringkas_teks(row["isi-berita"])
                 st.write(ringkasan)
 
         with col2:
-            st.write(row["Tanggal"])
+            st.write(row["url"])
 
         with col3:
-            st.write(row["Penulis"])
+            st.write(row["tanggal"])
 
         with col4:
-            st.write(row["Isi Berita"])
+            st.write(row["judul"])
+
+        with col5:
+            st.write(row["penulis"])
 
     # Menampilkan tabel berita lengkap
     st.subheader("Berita Lengkap")
     st.write(df.iloc[start_idx:end_idx])
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
