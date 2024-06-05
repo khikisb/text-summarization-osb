@@ -10,8 +10,18 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from wordcloud import WordCloud
 
-# Mengunduh stopwords NLTK
-nltk.download('stopwords')
+# Mengunduh stopwords NLTK jika belum diunduh
+try:
+    nltk.data.find('corpora/stopwords.zip')
+except:
+    nltk.download('stopwords')
+
+# Menggunakan stopwords bahasa Indonesia
+try:
+    stop_words = stopwords.words('indonesian')
+except:
+    nltk.download('stopwords')
+    stop_words = stopwords.words('indonesian')
 
 # Fungsi untuk membaca teks artikel berdasarkan ID artikel
 def baca_teks_artikel(teks_artikel):
@@ -61,7 +71,6 @@ def buat_word_cloud(teks):
 
 # Fungsi untuk meringkas teks artikel
 def ringkas_teks(teks_artikel, top_n=3):
-    stop_words = stopwords.words('english')
     teks_ringkasan = []
     kalimat = baca_teks_artikel(teks_artikel)
     matriks_kemiripan_kalimat = buat_matriks_kemiripan(kalimat, stop_words)
@@ -103,12 +112,12 @@ with tab1:
     st.write(df)
 
 with tab2:
-    st.header("Ringkas Artikel Tertentu")
-    id_artikel = st.number_input("Masukkan indeks ID Artikel untuk Dirangkum (0 hingga {})".format(len(df)-1), min_value=0, max_value=len(df)-1, step=1)
+    st.header("Ringkas Artikel Kustom")
+    teks_artikel = st.text_area("Masukkan teks artikel untuk diringkas")
     top_n = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3)
 
     if st.button("Ringkas"):
-        ringkasan, graph = ringkas_teks(df.loc[id_artikel, 'isi-berita'], top_n)
+        ringkasan, graph = ringkas_teks(teks_artikel, top_n)
         st.subheader("Ringkasan")
         st.write(ringkasan)
         
@@ -120,4 +129,3 @@ with tab2:
         st.subheader("Word Cloud")
         image = Image.open('wordcloud.png')
         st.image(image, use_column_width=True)
-
