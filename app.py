@@ -102,6 +102,23 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
+
+    # Tambahkan kolom input untuk jumlah kalimat
+    kolom_kalimat = st.number_input("Jumlah Kalimat untuk Ringkasan", min_value=1, max_value=10, step=1, value=3)
+
+    # Tambahkan tombol untuk merangkum berita
+    if st.button("Ringkas Berita"):
+        df_ringkasan = pd.DataFrame(columns=["Penulis", "Isi Berita Ringkas"])
+        for index, row in df.iloc[start_idx:end_idx].iterrows():
+            ringkasan, _ = ringkas_teks(row["Isi Berita"], kolom_kalimat)
+            df_ringkasan = df_ringkasan.append({"Penulis": row["Penulis"], "Isi Berita Ringkas": ringkasan}, ignore_index=True)
+
+        # Menampilkan tabel berita yang sudah diringkas
+        st.subheader("Berita yang Sudah Dirangkum")
+        st.write(df_ringkasan)
+
+    # Menampilkan tabel berita lengkap
+    st.subheader("Berita Lengkap")
     st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
