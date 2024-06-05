@@ -105,23 +105,16 @@ with tab1:
     end_idx = min(start_idx + per_page, len(df))
 
     # Tampilkan tabel dengan tombol "Ringkas Berita" dan input jumlah kalimat di setiap baris
+    tabel_data = []
     for index, row in df.iloc[start_idx:end_idx].iterrows():
-        st.write("Penulis:", row["penulis"])
-        st.write("Isi Berita:", row["isi-berita"])
-        
-        with st.form(key=f'ringkas_form_{index}'):
-            ringkasan_button = st.form_submit_button(label='Ringkas Berita')
-            kalimat_input = st.number_input(label='Jumlah Kalimat untuk Ringkasan', min_value=1, max_value=10, step=1, value=3)
-        
-        if ringkasan_button:
-            ringkasan, _ = ringkas_teks(row["isi-berita"], top_n=kalimat_input)
-            st.subheader("Ringkasan Berita")
-            st.write(ringkasan)
-            st.markdown("---")  # Garis pemisah antar berita
+        row_data = [row["url"], row["tanggal"], row["judul"], row["isi-berita"], row["penulis"]]
+        ringkas_button = st.button(f'Ringkas Berita {index}')
+        kalimat_input = st.number_input(label='Jumlah Kalimat untuk Ringkasan', min_value=1, max_value=10, step=1, value=3, key=f'input_{index}')
+        tabel_data.append(row_data + [ringkas_button, kalimat_input])
 
-    # Menampilkan tabel berita lengkap
-    st.subheader("Berita Lengkap")
-    st.write(df.iloc[start_idx:end_idx])
+    tabel_columns = ["URL", "Tanggal", "Judul", "Isi Berita", "Penulis", "Ringkas Berita", "Jumlah Kalimat"]
+    st.table(pd.DataFrame(tabel_data, columns=tabel_columns))
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
