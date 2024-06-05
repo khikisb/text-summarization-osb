@@ -107,21 +107,25 @@ with tab1:
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
     if st.button("Ringkas Artikel"):
-        artikel_terpilih = df.iloc[selected_index]["isi-berita"]
-        ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
-        st.subheader("Artikel Asli")
-        st.write(artikel_terpilih)
-        st.subheader("Ringkasan")
-        st.write(ringkasan)
-        
-        st.subheader("Grafik Kemiripan Kalimat")
-        plt.figure(figsize=(10, 7))
-        nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
-        st.pyplot(plt)
+        artikel_terpilih = df.iloc[selected_index]["isi_berita"]
+        try:
+            ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
+            st.subheader("Artikel Asli")
+            st.write(artikel_terpilih)
+            st.subheader("Ringkasan")
+            st.write(ringkasan)
+            
+            st.subheader("Grafik Kemiripan Kalimat")
+            plt.figure(figsize=(10, 7))
+            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
+            st.pyplot(plt)
 
-        st.subheader("Word Cloud")
-        image = Image.open('wordcloud.png')
-        st.image(image, use_column_width=True)
+            st.subheader("Word Cloud")
+            image = Image.open('wordcloud.png')
+            st.image(image, use_column_width=True)
+        except IndexError:
+            st.error("Gagal memperoleh ringkasan. Harap pilih dokumen yang berisi teks untuk diringkas.")
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
