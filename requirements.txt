@@ -6,3 +6,4 @@ networkx
 matplotlib
 pillow
 wordcloud
+scipy
