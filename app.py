@@ -111,21 +111,25 @@ with tab1:
     is_valid_input = artikel_index >= 0 and artikel_index < len(df) and top_n > 0
 
     if is_valid_input:
-        if st.button("Ringkas Berita"):
-            ringkasan, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
-            st.subheader("Ringkasan")
-            st.write(ringkasan)
-            
-            st.subheader("Grafik Kemiripan Kalimat")
-            plt.figure(figsize=(10, 7))
-            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
-            st.pyplot(plt)
+        if 'isi-berita' in df.columns and not pd.isnull(df.iloc[artikel_index]['isi-berita']):
+            if st.button("Ringkas Berita"):
+                ringkasan, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
+                st.subheader("Ringkasan")
+                st.write(ringkasan)
+                
+                st.subheader("Grafik Kemiripan Kalimat")
+                plt.figure(figsize=(10, 7))
+                nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
+                st.pyplot(plt)
 
-            st.subheader("Word Cloud")
-            image = Image.open('wordcloud.png')
-            st.image(image, use_column_width=True)
+                st.subheader("Word Cloud")
+                image = Image.open('wordcloud.png')
+                st.image(image, use_column_width=True)
+        else:
+            st.warning("Tidak ada teks berita yang tersedia untuk artikel ini.")
     else:
         st.warning("Silakan pilih nomor artikel dan masukkan jumlah kalimat untuk melanjutkan.")
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
