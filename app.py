@@ -106,11 +106,10 @@ with tab1:
 
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
-    try:
-        jumlah_kalimat = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3)
-    except streamlit.errors.DuplicateWidgetID:
-        st.warning("Tunggu sebentar...")
-        jumlah_kalimat = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3)
+    show_input = st.button("Tampilkan input jumlah kalimat")
+    jumlah_kalimat = 3  # Default value
+    if show_input:
+        jumlah_kalimat = st.number_input("Masukkan jumlah kalimat ringkasan", min_value=1, max_value=10, step=1, value=3)
 
     if st.button("Ringkas Artikel"):
         artikel_terpilih = df.iloc[selected_index]["isi_berita"]
@@ -131,7 +130,6 @@ with tab1:
             st.image(image, use_column_width=True)
         except IndexError:
             st.error("Gagal memperoleh ringkasan. Harap pilih dokumen yang berisi teks untuk diringkas.")
-
 
 
 
