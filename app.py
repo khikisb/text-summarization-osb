@@ -102,31 +102,24 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
-    st.write(df.iloc[start_idx:end_idx])
+    st.dataframe(df.iloc[start_idx:end_idx])
 
-    selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
-
-    jumlah_kalimat = st.number_input("Masukkan jumlah kalimat ringkasan", min_value=1, max_value=10, step=1, value=3)
-
-    if st.button("Ringkas Artikel"):
-        artikel_terpilih = df.iloc[selected_index]["isi-berita"]
-        try:
-            ringkasan, graph = ringkas_teks(artikel_terpilih, jumlah_kalimat)
-            st.subheader("Artikel Asli")
-            st.write(artikel_terpilih)
+    for index, row in df.iloc[start_idx:end_idx].iterrows():
+        if st.button(f"Ringkas Artikel {index}"):
+            ringkasan, graph = ringkas_teks(row['Teks Artikel'], top_n)
             st.subheader("Ringkasan")
             st.write(ringkasan)
-            
+
             st.subheader("Grafik Kemiripan Kalimat")
             plt.figure(figsize=(10, 7))
-            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
+            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20,
+                    font_weight='bold')
             st.pyplot(plt)
 
             st.subheader("Word Cloud")
             image = Image.open('wordcloud.png')
             st.image(image, use_column_width=True)
-        except IndexError:
-            st.error("Gagal memperoleh ringkasan. Harap pilih dokumen yang berisi teks untuk diringkas.")
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
