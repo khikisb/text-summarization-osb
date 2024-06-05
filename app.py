@@ -102,6 +102,27 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
+
+    # Tampilkan tabel dengan tambahan kolom "Ringkas Berita" dan "Jumlah Kalimat" di setiap baris data
+    for index, row in df.iloc[start_idx:end_idx].iterrows():
+        st.write(f"Penulis: {row['penulis']}")
+        st.write(f"Isi Berita: {row['isi-berita']}")
+        
+        with st.form(key=f"ringkasan_form_{index}"):
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                ringkas_button = st.form_submit_button(label="Ringkas Berita")
+            with col2:
+                kalimat_input = st.number_input(label="Jumlah Kalimat", min_value=1, max_value=10, step=1, value=3)
+        
+        if ringkas_button:
+            ringkasan, _ = ringkas_teks(row["isi-berita"], top_n=kalimat_input)
+            st.subheader("Ringkasan Berita")
+            st.write(ringkasan)
+            st.markdown("---")  # Garis pemisah antar berita
+
+    # Menampilkan tabel berita lengkap
+    st.subheader("Berita Lengkap")
     st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
