@@ -106,10 +106,12 @@ with tab1:
 
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
+    jumlah_kalimat = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3)
+
     if st.button("Ringkas Artikel"):
         artikel_terpilih = df.iloc[selected_index]["isi-berita"]
         try:
-            ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
+            ringkasan, graph = ringkas_teks(artikel_terpilih, jumlah_kalimat)
             st.subheader("Artikel Asli")
             st.write(artikel_terpilih)
             st.subheader("Ringkasan")
@@ -125,6 +127,7 @@ with tab1:
             st.image(image, use_column_width=True)
         except IndexError:
             st.error("Gagal memperoleh ringkasan. Harap pilih dokumen yang berisi teks untuk diringkas.")
+
 
 
 with tab2:
