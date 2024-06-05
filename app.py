@@ -105,7 +105,7 @@ with tab1:
 
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
-    if st.button("Ringkas"):
+    if st.button("Ringkas Artikel"):
         artikel_terpilih = df.iloc[selected_index]["isi_berita"]
         ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
         st.subheader("Artikel Asli")
@@ -121,7 +121,6 @@ with tab1:
         st.subheader("Word Cloud")
         image = Image.open('wordcloud.png')
         st.image(image, use_column_width=True)
-
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
