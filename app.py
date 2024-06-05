@@ -77,12 +77,11 @@ def ringkas_teks(teks_artikel, top_n=3):
     graph_kemiripan_kalimat = nx.from_numpy_array(matriks_kemiripan_kalimat)
     skor = nx.pagerank(graph_kemiripan_kalimat)
     kalimat_terurut = sorted(((skor[i], s) for i, s in enumerate(kalimat)), reverse=True)
-    for i in range(min(top_n, len(kalimat_terurut))):
+    for i in range(top_n):
         teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
     ringkasan = ". ".join(teks_ringkasan)
     buat_word_cloud(ringkasan)
     return ringkasan, graph_kemiripan_kalimat
-
 
 # Aplikasi Streamlit
 st.title("Perangkum dan Visualisasi Artikel Berita")
@@ -103,18 +102,7 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
-
-    # Tampilkan tabel dengan tombol "Ringkas Berita" dan input jumlah kalimat di setiap baris
-    tabel_data = []
-    for index, row in df.iloc[start_idx:end_idx].iterrows():
-        row_data = [row["url"], row["tanggal"], row["judul"], row["isi-berita"], row["penulis"]]
-        ringkas_button = st.button(f'Ringkas Berita {index}')
-        kalimat_input = st.number_input(label='Jumlah Kalimat untuk Ringkasan', min_value=1, max_value=10, step=1, value=3, key=f'input_{index}')
-        tabel_data.append(row_data + [ringkas_button, kalimat_input])
-
-    tabel_columns = ["URL", "Tanggal", "Judul", "Isi Berita", "Penulis", "Ringkas Berita", "Jumlah Kalimat"]
-    st.table(pd.DataFrame(tabel_data, columns=tabel_columns))
-
+    st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
