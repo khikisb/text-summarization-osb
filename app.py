@@ -77,11 +77,12 @@ def ringkas_teks(teks_artikel, top_n=3):
     graph_kemiripan_kalimat = nx.from_numpy_array(matriks_kemiripan_kalimat)
     skor = nx.pagerank(graph_kemiripan_kalimat)
     kalimat_terurut = sorted(((skor[i], s) for i, s in enumerate(kalimat)), reverse=True)
-    for i in range(top_n):
+    for i in range(min(top_n, len(kalimat_terurut))):
         teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
     ringkasan = ". ".join(teks_ringkasan)
     buat_word_cloud(ringkasan)
     return ringkasan, graph_kemiripan_kalimat
+
 
 # Aplikasi Streamlit
 st.title("Perangkum dan Visualisasi Artikel Berita")
