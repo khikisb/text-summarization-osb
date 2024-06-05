@@ -104,21 +104,29 @@ with tab1:
     end_idx = min(start_idx + per_page, len(df))
     st.dataframe(df.iloc[start_idx:end_idx])
 
-    for index, row in df.iloc[start_idx:end_idx].iterrows():
-        if st.button(f"Ringkas Artikel {index}"):
-            ringkasan, graph = ringkas_teks(row['isi-berita'], top_n)
+    artikel_index = st.number_input("Pilih nomor artikel untuk diringkas", min_value=0, max_value=len(df)-1, step=1, value=0)
+    top_n = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3)
+
+    # Memeriksa apakah kedua input telah diisi
+    is_valid_input = artikel_index >= 0 and artikel_index < len(df) and top_n > 0
+
+    if is_valid_input:
+        if st.button("Ringkas"):
+            ringkasan, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
             st.subheader("Ringkasan")
             st.write(ringkasan)
-
+            
             st.subheader("Grafik Kemiripan Kalimat")
             plt.figure(figsize=(10, 7))
-            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20,
-                    font_weight='bold')
+            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
             st.pyplot(plt)
 
             st.subheader("Word Cloud")
             image = Image.open('wordcloud.png')
             st.image(image, use_column_width=True)
+    else:
+        st.warning("Silakan pilih nomor artikel dan masukkan jumlah kalimat untuk melanjutkan.")
+
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
