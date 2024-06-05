@@ -103,19 +103,22 @@ with tab1:
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
 
-    # Tambahkan kolom input untuk jumlah kalimat
-    kolom_kalimat = st.number_input("Jumlah Kalimat untuk Ringkasan", min_value=1, max_value=10, step=1, value=3)
+    # Tampilkan tombol "Ringkas Berita" di samping setiap baris tabel
+    for index, row in df.iloc[start_idx:end_idx].iterrows():
+        col1, col2, col3, col4 = st.columns([0.1, 0.3, 0.4, 0.2])
+        with col1:
+            if st.button("Ringkas", key=f"ringkas_{index}"):
+                ringkasan, _ = ringkas_teks(row["Isi Berita"])
+                st.write(ringkasan)
 
-    # Tambahkan tombol untuk merangkum berita
-    if st.button("Ringkas Berita"):
-        df_ringkasan = pd.DataFrame(columns=["Penulis", "Isi Berita Ringkas"])
-        for index, row in df.iloc[start_idx:end_idx].iterrows():
-            ringkasan, _ = ringkas_teks(row["Isi Berita"], kolom_kalimat)
-            df_ringkasan = df_ringkasan.append({"Penulis": row["Penulis"], "Isi Berita Ringkas": ringkasan}, ignore_index=True)
+        with col2:
+            st.write(row["Tanggal"])
 
-        # Menampilkan tabel berita yang sudah diringkas
-        st.subheader("Berita yang Sudah Dirangkum")
-        st.write(df_ringkasan)
+        with col3:
+            st.write(row["Penulis"])
+
+        with col4:
+            st.write(row["Isi Berita"])
 
     # Menampilkan tabel berita lengkap
     st.subheader("Berita Lengkap")
