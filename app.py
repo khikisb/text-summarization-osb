@@ -72,30 +72,16 @@ def buat_word_cloud(teks):
 def ringkas_teks(teks_artikel, top_n=3):
     teks_ringkasan = []
     kalimat = baca_teks_artikel(teks_artikel)
-    if not kalimat:
-        return "Tidak dapat merangkum artikel. Silakan coba artikel lain.", None
     matriks_kemiripan_kalimat = buat_matriks_kemiripan(kalimat, stop_words)
     graph_kemiripan_kalimat = nx.from_numpy_array(matriks_kemiripan_kalimat)
     skor = nx.pagerank(graph_kemiripan_kalimat)
     kalimat_terurut = sorted(((skor[i], s) for i, s in enumerate(kalimat)), reverse=True)
-    
-    # Menambahkan isi berita yang belum diringkas di output
-    isi_berita_asli = ". ".join(teks_artikel.split(". ")[:len(kalimat)])
-    
-    if top_n == 1:
-        teks_ringkasan.append(" ".join(kalimat_terurut[0][1]))
-    else:
-        for i in range(min(top_n, len(kalimat_terurut))):
-            teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
-    
+    for i in range(top_n):
+        teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
     ringkasan = ". ".join(teks_ringkasan)
-    
-    # Proses stopword hanya pada ringkasan
-    ringkasan = ' '.join([word for word in ringkasan.split() if word.lower() not in stop_words])
-    
     buat_word_cloud(ringkasan)
-    
-    return ringkasan, isi_berita_asli, graph_kemiripan_kalimat
+    return ringkasan, graph_kemiripan_kalimat
+
 
 
 
