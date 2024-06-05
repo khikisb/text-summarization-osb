@@ -106,7 +106,7 @@ with tab1:
 
     for index, row in df.iloc[start_idx:end_idx].iterrows():
         if st.button(f"Ringkas Artikel {index}"):
-            ringkasan, graph = ringkas_teks(row['Teks Artikel'], top_n)
+            ringkasan, graph = ringkas_teks(row['isi-berita'], top_n)
             st.subheader("Ringkasan")
             st.write(ringkasan)
 
@@ -119,7 +119,6 @@ with tab1:
             st.subheader("Word Cloud")
             image = Image.open('wordcloud.png')
             st.image(image, use_column_width=True)
-
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
