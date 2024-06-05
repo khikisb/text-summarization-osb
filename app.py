@@ -69,6 +69,7 @@ def buat_word_cloud(teks):
     plt.axis("off")
     plt.savefig('wordcloud.png', facecolor='k', bbox_inches='tight')
 
+# Fungsi untuk meringkas teks artikel
 def ringkas_teks(teks_artikel, top_n=3):
     teks_ringkasan = []
     kalimat = baca_teks_artikel(teks_artikel)
@@ -81,9 +82,6 @@ def ringkas_teks(teks_artikel, top_n=3):
     ringkasan = ". ".join(teks_ringkasan)
     buat_word_cloud(ringkasan)
     return ringkasan, graph_kemiripan_kalimat
-
-
-
 
 # Aplikasi Streamlit
 st.title("Perangkum dan Visualisasi Artikel Berita")
@@ -104,38 +102,7 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
-    st.dataframe(df.iloc[start_idx:end_idx])
-
-    artikel_index = st.number_input("Pilih nomor artikel untuk diringkas", min_value=0, max_value=len(df)-1, step=1, value=0)
-    top_n = st.slider("Masukkan jumlah kalimat ringkasan", min_value=1, max_value=10, value=3)
-
-    # Memeriksa apakah kedua input telah diisi
-    is_valid_input = artikel_index >= 0 and artikel_index < len(df) and top_n > 0
-
-if is_valid_input:
-    if 'isi-berita' in df.columns and not pd.isnull(df.iloc[artikel_index]['isi-berita']):
-        if st.button("Ringkas Berita"):
-            ringkasan, isi_berita_asli, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
-            st.subheader("Ringkasan")
-            st.write(ringkasan)
-            
-            st.subheader("Isi Berita Asli")
-            st.write(isi_berita_asli)
-            
-            st.subheader("Grafik Kemiripan Kalimat")
-            plt.figure(figsize=(10, 7))
-            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
-            st.pyplot(plt)
-
-            st.subheader("Word Cloud")
-            image = Image.open('wordcloud.png')
-            st.image(image, use_column_width=True)
-    else:
-        st.warning("Tidak ada teks berita yang tersedia untuk artikel ini.")
-else:
-    st.warning("Silakan pilih nomor artikel dan masukkan jumlah kalimat untuk melanjutkan.")
-
-
+    st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
