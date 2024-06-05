@@ -111,7 +111,7 @@ with tab1:
     is_valid_input = artikel_index >= 0 and artikel_index < len(df) and top_n > 0
 
     if is_valid_input:
-        if st.button("Ringkas"):
+        if st.button("Ringkas Berita"):
             ringkasan, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
             st.subheader("Ringkasan")
             st.write(ringkasan)
