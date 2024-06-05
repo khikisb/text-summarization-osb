@@ -78,11 +78,21 @@ def ringkas_teks(teks_artikel, top_n=3):
     graph_kemiripan_kalimat = nx.from_numpy_array(matriks_kemiripan_kalimat)
     skor = nx.pagerank(graph_kemiripan_kalimat)
     kalimat_terurut = sorted(((skor[i], s) for i, s in enumerate(kalimat)), reverse=True)
-    for i in range(min(top_n, len(kalimat_terurut))):
-        teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
+    
+    # Menambahkan isi berita yang belum diringkas di output
+    isi_berita_asli = ". ".join(teks_artikel.split(". ")[:len(kalimat)])
+    
+    if top_n == 1:
+        teks_ringkasan.append(" ".join(kalimat_terurut[0][1]))
+    else:
+        for i in range(min(top_n, len(kalimat_terurut))):
+            teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
+    
     ringkasan = ". ".join(teks_ringkasan)
     buat_word_cloud(ringkasan)
-    return ringkasan, graph_kemiripan_kalimat
+    
+    return ringkasan, isi_berita_asli, graph_kemiripan_kalimat
+
 
 
 # Aplikasi Streamlit
@@ -112,25 +122,29 @@ with tab1:
     # Memeriksa apakah kedua input telah diisi
     is_valid_input = artikel_index >= 0 and artikel_index < len(df) and top_n > 0
 
-    if is_valid_input:
-        if 'isi-berita' in df.columns and not pd.isnull(df.iloc[artikel_index]['isi-berita']):
-            if st.button("Ringkas Berita"):
-                ringkasan, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
-                st.subheader("Ringkasan")
-                st.write(ringkasan)
-                
-                st.subheader("Grafik Kemiripan Kalimat")
-                plt.figure(figsize=(10, 7))
-                nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
-                st.pyplot(plt)
+if is_valid_input:
+    if 'isi-berita' in df.columns and not pd.isnull(df.iloc[artikel_index]['isi-berita']):
+        if st.button("Ringkas Berita"):
+            ringkasan, isi_berita_asli, graph = ringkas_teks(df.iloc[artikel_index]['isi-berita'], top_n)
+            st.subheader("Ringkasan")
+            st.write(ringkasan)
+            
+            st.subheader("Isi Berita Asli")
+            st.write(isi_berita_asli)
+            
+            st.subheader("Grafik Kemiripan Kalimat")
+            plt.figure(figsize=(10, 7))
+            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
+            st.pyplot(plt)
 
-                st.subheader("Word Cloud")
-                image = Image.open('wordcloud.png')
-                st.image(image, use_column_width=True)
-        else:
-            st.warning("Tidak ada teks berita yang tersedia untuk artikel ini.")
+            st.subheader("Word Cloud")
+            image = Image.open('wordcloud.png')
+            st.image(image, use_column_width=True)
     else:
-        st.warning("Silakan pilih nomor artikel dan masukkan jumlah kalimat untuk melanjutkan.")
+        st.warning("Tidak ada teks berita yang tersedia untuk artikel ini.")
+else:
+    st.warning("Silakan pilih nomor artikel dan masukkan jumlah kalimat untuk melanjutkan.")
+
 
 
 with tab2:
