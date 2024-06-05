@@ -103,25 +103,16 @@ with tab1:
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
 
-    # Tampilkan tombol "Ringkas Berita" di samping setiap baris tabel
+    # Tampilkan tabel dengan tombol "Ringkas Berita"
     for index, row in df.iloc[start_idx:end_idx].iterrows():
-        col1, col2, col3, col4, col5 = st.columns([0.1, 0.15, 0.25, 0.4, 0.1])
-        with col1:
-            if st.button("Ringkas", key=f"ringkas_{index}"):
-                ringkasan, _ = ringkas_teks(row["isi-berita"])
-                st.write(ringkasan)
-
-        with col2:
-            st.write(row["url"])
-
-        with col3:
-            st.write(row["tanggal"])
-
-        with col4:
-            st.write(row["judul"])
-
-        with col5:
-            st.write(row["penulis"])
+        st.write("Penulis:", row["penulis"])
+        st.write("Isi Berita:", row["isi-berita"])
+        ringkas_button = st.button(label="Ringkas Berita", key=f"ringkas_{index}")
+        if ringkas_button:
+            ringkasan, _ = ringkas_teks(row["isi-berita"])
+            st.subheader("Ringkasan Berita")
+            st.write(ringkasan)
+            st.markdown("---")  # Garis pemisah antar berita
 
     # Menampilkan tabel berita lengkap
     st.subheader("Berita Lengkap")
