@@ -119,6 +119,7 @@ with tab1:
     st.write(df.iloc[start_idx:end_idx])
 
 
+
 with tab2:
     st.header("Ringkas Artikel Kustom")
     teks_artikel = st.text_area("Masukkan teks artikel untuk diringkas")
