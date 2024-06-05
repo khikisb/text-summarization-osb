@@ -102,11 +102,12 @@ with tab1:
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
+    st.write(df.iloc[start_idx:end_idx])
 
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
     if st.button("Ringkas Artikel"):
-        artikel_terpilih = df.iloc[selected_index]["isi_berita"]
+        artikel_terpilih = df.iloc[selected_index]["isi-berita"]
         ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
         st.subheader("Artikel Asli")
         st.write(artikel_terpilih)
