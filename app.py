@@ -89,6 +89,10 @@ def ringkas_teks(teks_artikel, top_n=3):
             teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
     
     ringkasan = ". ".join(teks_ringkasan)
+    
+    # Proses stopword hanya pada ringkasan
+    ringkasan = ' '.join([word for word in ringkasan.split() if word.lower() not in stop_words])
+    
     buat_word_cloud(ringkasan)
     
     return ringkasan, isi_berita_asli, graph_kemiripan_kalimat
