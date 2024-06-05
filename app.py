@@ -69,19 +69,21 @@ def buat_word_cloud(teks):
     plt.axis("off")
     plt.savefig('wordcloud.png', facecolor='k', bbox_inches='tight')
 
-# Fungsi untuk meringkas teks artikel
 def ringkas_teks(teks_artikel, top_n=3):
     teks_ringkasan = []
     kalimat = baca_teks_artikel(teks_artikel)
+    if not kalimat:
+        return "Tidak dapat merangkum artikel. Silakan coba artikel lain.", None
     matriks_kemiripan_kalimat = buat_matriks_kemiripan(kalimat, stop_words)
     graph_kemiripan_kalimat = nx.from_numpy_array(matriks_kemiripan_kalimat)
     skor = nx.pagerank(graph_kemiripan_kalimat)
     kalimat_terurut = sorted(((skor[i], s) for i, s in enumerate(kalimat)), reverse=True)
-    for i in range(top_n):
+    for i in range(min(top_n, len(kalimat_terurut))):
         teks_ringkasan.append(" ".join(kalimat_terurut[i][1]))
     ringkasan = ". ".join(teks_ringkasan)
     buat_word_cloud(ringkasan)
     return ringkasan, graph_kemiripan_kalimat
+
 
 # Aplikasi Streamlit
 st.title("Perangkum dan Visualisasi Artikel Berita")
