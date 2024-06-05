@@ -96,20 +96,13 @@ tab1, tab2 = st.tabs(["Ringkasan Semua Artikel", "Ringkasan Artikel Kustom"])
 with tab1:
     st.header("Ringkasan Semua Artikel")
 
-    # Menyimpan ringkasan artikel dalam DataFrame
-    if 'Ringkasan' not in df.columns:
-        df['Ringkasan'] = ""
-
-    # Menampilkan tabel artikel dengan tombol ringkas
-    for i in range(len(df)):
-        col1, col2 = st.columns([3, 1])
-        col1.write(df.loc[i, 'isi-berita'])
-        if col2.button("Ringkas", key=i):
-            ringkasan, _ = ringkas_teks(df.loc[i, 'isi-berita'])
-            df.at[i, 'Ringkasan'] = ringkasan
-
-    # Menampilkan tabel dengan ringkasan
-    st.write(df)
+    # Menampilkan tabel dengan pagination
+    per_page = 10
+    total_pages = len(df) // per_page + (1 if len(df) % per_page > 0 else 0)
+    page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
+    start_idx = (page - 1) * per_page
+    end_idx = min(start_idx + per_page, len(df))
+    st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
