@@ -107,7 +107,7 @@ with tab1:
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
     if st.button("Ringkas Artikel"):
-        artikel_terpilih = df.iloc[selected_index]["isi_berita"]
+        artikel_terpilih = df.iloc[selected_index]["isi-berita"]
         try:
             ringkasan, graph = ringkas_teks(artikel_terpilih, 3)  # Misalnya, ringkasan diambil dari 3 kalimat teratas
             st.subheader("Artikel Asli")
