@@ -103,47 +103,24 @@ with tab1:
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
 
-    # Tampilkan tabel
-    tabel = df.iloc[start_idx:end_idx]
-    st.write(tabel)
-
-    # Tambahkan dua tombol
-    with st.form(key='ringkasan_form'):
-        ringkas_button = st.form_submit_button(label='Ringkas Berita')
-        kalimat_input = st.number_input(label='Jumlah Kalimat untuk Ringkasan', min_value=1, max_value=10, step=1, value=3)
-
-    # Jika tombol "Ringkas Berita" ditekan dan ada inputan jumlah kalimat
-    if ringkas_button and kalimat_input:
-        berita_ringkasan = []
-        for index, row in tabel.iterrows():
+    # Tampilkan tabel dengan tombol "Ringkas Berita" dan input jumlah kalimat di setiap baris
+    for index, row in df.iloc[start_idx:end_idx].iterrows():
+        st.write("Penulis:", row["penulis"])
+        st.write("Isi Berita:", row["isi-berita"])
+        
+        with st.form(key=f'ringkas_form_{index}'):
+            ringkasan_button = st.form_submit_button(label='Ringkas Berita')
+            kalimat_input = st.number_input(label='Jumlah Kalimat untuk Ringkasan', min_value=1, max_value=10, step=1, value=3)
+        
+        if ringkasan_button:
             ringkasan, _ = ringkas_teks(row["isi-berita"], top_n=kalimat_input)
-            berita_ringkasan.append({'Penulis': row["penulis"], 'Isi Berita Ringkas': ringkasan})
+            st.subheader("Ringkasan Berita")
+            st.write(ringkasan)
+            st.markdown("---")  # Garis pemisah antar berita
 
-        # Tampilkan tabel berita yang belum diringkas dan berita yang sudah diringkas
-        st.subheader("Berita yang Belum Dirangkas")
-        st.write(tabel)
-
-        st.subheader("Berita yang Sudah Dirangkaskan")
-        df_ringkasan = pd.DataFrame(berita_ringkasan)
-        st.write(df_ringkasan)
-
-        # Tampilkan grafik kemiripan kalimat dan word cloud
-        for index, row in df_ringkasan.iterrows():
-            st.subheader(f"Ringkasan Berita oleh {row['Penulis']}")
-            st.write(row['Isi Berita Ringkas'])
-
-            _, graph = ringkas_teks(row['Isi Berita Ringkas'], top_n=kalimat_input)
-
-            st.subheader("Grafik Kemiripan Kalimat")
-            plt.figure(figsize=(10, 7))
-            nx.draw(graph, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=20, font_weight='bold')
-            st.pyplot(plt)
-
-            st.subheader("Word Cloud")
-            buat_word_cloud(row['Isi Berita Ringkas'])
-            image = Image.open('wordcloud.png')
-            st.image(image, use_column_width=True)
-
+    # Menampilkan tabel berita lengkap
+    st.subheader("Berita Lengkap")
+    st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
