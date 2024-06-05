@@ -106,13 +106,12 @@ with tab1:
 
     selected_index = st.selectbox("Pilih dokumen untuk diringkas", range(start_idx, end_idx))
 
-    show_input = st.button("Tampilkan input jumlah kalimat")
     jumlah_kalimat = 3  # Default value
     if show_input:
         jumlah_kalimat = st.number_input("Masukkan jumlah kalimat ringkasan", min_value=1, max_value=10, step=1, value=3)
 
     if st.button("Ringkas Artikel"):
-        artikel_terpilih = df.iloc[selected_index]["isi_berita"]
+        artikel_terpilih = df.iloc[selected_index]["isi-berita"]
         try:
             ringkasan, graph = ringkas_teks(artikel_terpilih, jumlah_kalimat)
             st.subheader("Artikel Asli")
