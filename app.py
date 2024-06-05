@@ -105,7 +105,7 @@ with tab1:
     st.dataframe(df.iloc[start_idx:end_idx])
 
     artikel_index = st.number_input("Pilih nomor artikel untuk diringkas", min_value=0, max_value=len(df)-1, step=1, value=0)
-    top_n = st.slider("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, value=3)
+    top_n = st.slider("Masukkan jumlah kalimat ringkasan", min_value=1, max_value=10, value=3)
 
     # Memeriksa apakah kedua input telah diisi
     is_valid_input = artikel_index >= 0 and artikel_index < len(df) and top_n > 0
