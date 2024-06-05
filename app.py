@@ -91,10 +91,10 @@ url = "https://gist.githubusercontent.com/khikisb/ce2f0cedd1605c056966bec0396f35
 df = pd.read_csv(url)
 
 # Tata letak Tab
-tab1, tab2 = st.tabs(["Ringkasan Semua Artikel", "Ringkasan Artikel Kustom"])
+tab1, tab2 = st.tabs(["Data Berita", "Ringkasan Artikel Kustom"])
 
 with tab1:
-    st.header("Ringkasan Semua Artikel")
+    st.header("Data Berita")
 
     # Menampilkan tabel dengan pagination
     per_page = 10
