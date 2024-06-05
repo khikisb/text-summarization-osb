@@ -96,35 +96,19 @@ tab1, tab2 = st.tabs(["Ringkasan Semua Artikel", "Ringkasan Artikel Kustom"])
 with tab1:
     st.header("Ringkasan Semua Artikel")
 
-    # Menampilkan tabel artikel dengan tombol ringkas
+    # Menampilkan tabel dengan pagination
     per_page = 10
     total_pages = len(df) // per_page + (1 if len(df) % per_page > 0 else 0)
     page = st.number_input("Halaman", min_value=1, max_value=total_pages, step=1, value=1)
     start_idx = (page - 1) * per_page
     end_idx = min(start_idx + per_page, len(df))
+    st.write(df.iloc[start_idx:end_idx])
 
-    # Inisialisasi kolom "Isi Berita Sebelum Dirangkum" dan "Isi Berita Sesudah Dirangkum"
-    if 'Isi Berita Sebelum Dirangkum' not in df.columns:
-        df['Isi Berita Sebelum Dirangkum'] = ""
-    if 'Isi Berita Sesudah Dirangkum' not in df.columns:
-        df['Isi Berita Sesudah Dirangkum'] = ""
-
+    # Tombol untuk meringkas setiap artikel
     for i in range(start_idx, end_idx):
-        st.write(f"**URL:** {df.loc[i, 'url']}")
-        st.write(f"**Tanggal:** {df.loc[i, 'tanggal']}")
-        st.write(f"**Judul:** {df.loc[i, 'judul']}")
-        st.write(f"**Penulis:** {df.loc[i, 'penulis']}")
-        st.write(f"**Isi Berita:** {df.loc[i, 'isi-berita']}")
-        top_n = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3, key=f"top_n_{i}")
-        if st.button("Ringkas", key=f"ringkas_{i}"):
-            ringkasan, _ = ringkas_teks(df.loc[i, 'isi-berita'], top_n)
-            df.at[i, 'Isi Berita Sebelum Dirangkum'] = df.loc[i, 'isi-berita']
-            df.at[i, 'Isi Berita Sesudah Dirangkum'] = ringkasan
-        if df.loc[i, 'Isi Berita Sebelum Dirangkum']:
-            st.write(f"**Isi Berita Sebelum Dirangkum:** {df.loc[i, 'Isi Berita Sebelum Dirangkum']}")
-        if df.loc[i, 'Isi Berita Sesudah Dirangkum']:
-            st.write(f"**Isi Berita Sesudah Dirangkum:** {df.loc[i, 'Isi Berita Sesudah Dirangkum']}")
-        st.markdown("---")
+        if st.button(f"Ringkas Artikel {i}"):
+            ringkasan, _ = ringkas_teks(df.loc[i, 'isi-berita'])
+            df.at[i, 'ringkasan'] = ringkasan
 
 with tab2:
     st.header("Ringkas Artikel Kustom")
