@@ -84,7 +84,7 @@ def ringkas_teks(teks_artikel, top_n=3):
     return ringkasan, graph_kemiripan_kalimat
 
 # Aplikasi Streamlit
-st.title("Sistem ringkas text")
+st.title("Proyek Pemrosesan Bahasa Alami Sistem ringkas text")
 st.write("210411100112 - Okhi Sahrul Barkah")
 
 # Memuat data dari CSV
@@ -92,7 +92,7 @@ url = "https://gist.githubusercontent.com/khikisb/ce2f0cedd1605c056966bec0396f35
 df = pd.read_csv(url)
 
 # Tata letak Tab
-tab1, tab2 = st.tabs(["Data Berita", "Ringkasan Artikel Kustom"])
+tab1, tab2 = st.tabs(["Data Berita", "Ringkas text"])
 
 with tab1:
     st.header("Data Berita")
