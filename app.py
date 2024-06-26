@@ -84,7 +84,8 @@ def ringkas_teks(teks_artikel, top_n=3):
     return ringkasan, graph_kemiripan_kalimat
 
 # Aplikasi Streamlit
-st.title("Perangkum dan Visualisasi Artikel Berita")
+st.title("Sistem ringkas text")
+st.write("210411100112 - Okhi Sahrul Barkah")
 
 # Memuat data dari CSV
 url = "https://gist.githubusercontent.com/khikisb/ce2f0cedd1605c056966bec0396f35ad/raw/3089ba335874a6818927dab3309727c68eedde98/berita.csv"
@@ -105,8 +106,8 @@ with tab1:
     st.write(df.iloc[start_idx:end_idx])
 
 with tab2:
-    st.header("Ringkas Artikel Kustom")
-    teks_artikel = st.text_area("Masukkan teks artikel untuk diringkas")
+    st.header("Ringkas Text")
+    teks_artikel = st.text_area("Masukkan teks untuk diringkas")
     top_n = st.number_input("Masukkan jumlah kalimat untuk ringkasan", min_value=1, max_value=10, step=1, value=3)
 
     if st.button("Ringkas"):
